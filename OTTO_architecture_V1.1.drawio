@@ -1,11 +1,11 @@
 <mxfile host="app.diagrams.net">
   <diagram name="페이지-1" id="CW_QV-zsDP4zlpW2mwvX">
-    <mxGraphModel dx="2540" dy="1218" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="2453" dy="1177" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
         <mxCell id="kCIrLIhmROiog3_jmkQ7-7" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
-          <mxGeometry height="190" width="340" x="160" y="40" as="geometry" />
+          <mxGeometry height="190" width="450" x="110" y="40" as="geometry" />
         </mxCell>
         <mxCell id="9hwGydthbRDtuuNSAIKW-12" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
           <mxGeometry height="410" width="360" x="-440" y="-120" as="geometry" />
@@ -56,13 +56,11 @@
         <mxCell id="9hwGydthbRDtuuNSAIKW-22" parent="1" style="whiteSpace=wrap;html=1;rounded=1;" value="&lt;div&gt;Kafka&lt;/div&gt;&lt;div&gt;Consumer&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;Kafka Connect&lt;div&gt;(S3 sink)&lt;/div&gt;" vertex="1">
           <mxGeometry height="80" width="120" x="-30" y="95" as="geometry" />
         </mxCell>
-        <mxCell id="kCIrLIhmROiog3_jmkQ7-1" edge="1" parent="1" source="9hwGydthbRDtuuNSAIKW-27" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=-0.016;entryY=0.532;entryDx=0;entryDy=0;entryPerimeter=0;" target="kCIrLIhmROiog3_jmkQ7-4">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="320" y="134" as="targetPoint" />
-          </mxGeometry>
+        <mxCell id="Y2JfjusvmUupAe2O-7ZA-2" edge="1" parent="1" source="9hwGydthbRDtuuNSAIKW-27" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="Y2JfjusvmUupAe2O-7ZA-1">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="9hwGydthbRDtuuNSAIKW-27" parent="1" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#7AA116;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.s3;" value="Parquet 형태 적재" vertex="1">
-          <mxGeometry height="78" width="78" x="190" y="97" as="geometry" />
+          <mxGeometry height="78" width="78" x="161" y="96" as="geometry" />
         </mxCell>
         <mxCell id="kCIrLIhmROiog3_jmkQ7-12" edge="1" parent="1" source="9hwGydthbRDtuuNSAIKW-36" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="kCIrLIhmROiog3_jmkQ7-11" value="">
           <mxGeometry relative="1" as="geometry" />
@@ -79,16 +77,16 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="kCIrLIhmROiog3_jmkQ7-4" parent="1" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/databases/Azure_Database_PostgreSQL_Server.svg;" value="일배치 데이터 마트 구성" vertex="1">
-          <mxGeometry height="86.25" width="64.69" x="400" y="90" as="geometry" />
+          <mxGeometry height="86.25" width="64.69" x="460" y="90" as="geometry" />
         </mxCell>
         <mxCell id="kCIrLIhmROiog3_jmkQ7-17" edge="1" parent="1" source="kCIrLIhmROiog3_jmkQ7-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" target="kCIrLIhmROiog3_jmkQ7-15">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="kCIrLIhmROiog3_jmkQ7-8" parent="1" style="whiteSpace=wrap;html=1;rounded=1;" value="Airflow" vertex="1">
-          <mxGeometry height="60" width="120" x="268" y="10" as="geometry" />
+          <mxGeometry height="60" width="120" x="280" y="10" as="geometry" />
         </mxCell>
         <mxCell id="kCIrLIhmROiog3_jmkQ7-9" parent="1" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;labelBackgroundColor=default;" value="&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;대시보드&lt;/div&gt;&lt;div&gt;Metabase&lt;/div&gt;" vertex="1">
-          <mxGeometry height="60" width="120" x="579.995" y="103.125" as="geometry" />
+          <mxGeometry height="60" width="120" x="599.995" y="103.125" as="geometry" />
         </mxCell>
         <mxCell id="kCIrLIhmROiog3_jmkQ7-13" edge="1" parent="1" source="kCIrLIhmROiog3_jmkQ7-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" target="9hwGydthbRDtuuNSAIKW-12">
           <mxGeometry relative="1" as="geometry">
@@ -104,6 +102,12 @@
         </mxCell>
         <mxCell id="kCIrLIhmROiog3_jmkQ7-15" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Slack&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Kafka 문제 발생 시 슬랙 알람&lt;/div&gt;&lt;div&gt;(Broker 다운, Consumer Lag 등 - 실시간)&lt;/div&gt;&lt;div&gt;Airflow 문제 발생 시 슬랙 알람&lt;/div&gt;&lt;div&gt;(일배치 DAG retry 발생)&lt;/div&gt;" vertex="1">
           <mxGeometry height="110" width="240" x="380" y="-310" as="geometry" />
+        </mxCell>
+        <mxCell id="Y2JfjusvmUupAe2O-7ZA-1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Spark" vertex="1">
+          <mxGeometry height="60" width="100" x="290" y="105" as="geometry" />
+        </mxCell>
+        <mxCell id="Y2JfjusvmUupAe2O-7ZA-3" edge="1" parent="1" source="Y2JfjusvmUupAe2O-7ZA-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.155;entryY=0.522;entryDx=0;entryDy=0;entryPerimeter=0;" target="kCIrLIhmROiog3_jmkQ7-4">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
