@@ -30,9 +30,6 @@
         <mxCell id="9hwGydthbRDtuuNSAIKW-8" parent="1" style="whiteSpace=wrap;html=1;rounded=1;" value="Kafka Cluster" vertex="1">
           <mxGeometry height="60" width="120" x="-320" y="-150" as="geometry" />
         </mxCell>
-        <mxCell id="9hwGydthbRDtuuNSAIKW-13" parent="1" style="whiteSpace=wrap;html=1;rounded=1;" value="Zookeeper" vertex="1">
-          <mxGeometry height="60" width="120" x="-320" y="-70" as="geometry" />
-        </mxCell>
         <mxCell id="9hwGydthbRDtuuNSAIKW-14" parent="1" style="whiteSpace=wrap;html=1;rounded=1;" value="Kafka Broker 1&lt;div&gt;(Leader)&lt;/div&gt;" vertex="1">
           <mxGeometry height="60" width="120" x="-320" y="30" as="geometry" />
         </mxCell>
@@ -108,6 +105,15 @@
         </mxCell>
         <mxCell id="Y2JfjusvmUupAe2O-7ZA-3" edge="1" parent="1" source="Y2JfjusvmUupAe2O-7ZA-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.155;entryY=0.522;entryDx=0;entryDy=0;entryPerimeter=0;" target="kCIrLIhmROiog3_jmkQ7-4">
           <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Y2JfjusvmUupAe2O-7ZA-5" edge="1" parent="1" source="Y2JfjusvmUupAe2O-7ZA-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" target="9hwGydthbRDtuuNSAIKW-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Y2JfjusvmUupAe2O-7ZA-6" edge="1" parent="1" source="Y2JfjusvmUupAe2O-7ZA-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" target="9hwGydthbRDtuuNSAIKW-22">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Y2JfjusvmUupAe2O-7ZA-4" parent="1" style="whiteSpace=wrap;html=1;rounded=1;" value="Schema&lt;div&gt;Registry&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="120" x="-320" y="330" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
