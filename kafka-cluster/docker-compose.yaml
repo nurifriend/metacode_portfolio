@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   broker:
-    image: confluentinc/cp-server:7.6.0
+    image: confluentinc/cp-kafka:7.6.0
     hostname: broker
     container_name: broker
     ports:
@@ -13,7 +13,6 @@ services:
       KAFKA_CONTROLLER_QUORUM_VOTERS: '1@broker:29093'
       KAFKA_LISTENERS: 'PLAINTEXT://broker:29092,CONTROLLER://broker:29093,PLAINTEXT_HOST://0.0.0.0:9092'
       KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://broker:29092,PLAINTEXT_HOST://localhost:9092'
-      # [필수 추가됨] 리스너 이름에 대한 보안 프로토콜 정의
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT'
       KAFKA_INTER_BROKER_LISTENER_NAME: 'PLAINTEXT'
       KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
@@ -62,10 +61,20 @@ services:
       CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: 1
       CONNECT_STATUS_STORAGE_TOPIC: docker-connect-status
       CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 1
+      
+      # [핵심 변경 사항] JSON Converter 대신 Avro Converter 사용 및 Schema Registry 연결
       CONNECT_KEY_CONVERTER: org.apache.kafka.connect.storage.StringConverter
       CONNECT_VALUE_CONVERTER: io.confluent.connect.avro.AvroConverter
       CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: http://schema-registry:8081
+      
       CONNECT_PLUGIN_PATH: "/usr/share/java,/usr/share/confluent-hub-components"
+      
+      # AWS Credentials (반드시 같은 폴더의 .env 파일에 값을 입력하세요)
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_REGION: ${AWS_REGION}
+    volumes:
+      - connect-plugins:/usr/share/confluent-hub-components
     command: 
       - bash
       - -c
@@ -102,3 +111,4 @@ networks:
 
 volumes:
   broker-data:
+  connect-plugins:
