@@ -1,3 +1,11 @@
 venv/
 __pycache__/
 .cache/
+
+# 데이터 파일 제외
+*.jsonl
+*.zip
+*.gz
+
+# 출력 폴더 제외
+output/
