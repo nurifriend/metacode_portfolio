@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  postgres-dw:
+    image: postgres:15
+    container_name: postgres-dw
+    restart: always
+    environment:
+      POSTGRES_USER: your_db_user      # Spark 코드와 일치해야 함
+      POSTGRES_PASSWORD: your_db_password # Spark 코드와 일치해야 함
+      POSTGRES_DB: otto_dw
+    ports:
+      - "5432:5432" # Host(5432) : Container(5432)
+    volumes:
+      - postgres_dw_data:/var/lib/postgresql/data # 볼륨 매핑 (데이터 영구 저장)
+
+volumes:
+  postgres_dw_data:

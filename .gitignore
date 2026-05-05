@@ -1,11 +1,32 @@
+# 가상환경 및 캐시
 venv/
+.venv/
 __pycache__/
 .cache/
+.ipynb_checkpoints/
 
-# 데이터 파일 제외
+# 데이터 파일 (대용량)
 *.jsonl
 *.zip
 *.gz
+*.parquet
+*.csv
 
-# 출력 폴더 제외
+# 출력 및 로그
 output/
+logs/
+*.log
+
+# 개인적인 메모 (Git 제외)
+questions.md
+todo.md
+
+# OS 관련
+.DS_Store
+
+# 환경설정 파일 제외
+.env
+__pycache__/
+
+# Spark/Hadoop
+*.jar
