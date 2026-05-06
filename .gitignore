@@ -27,6 +27,7 @@ todo.md
 # 환경설정 파일 제외
 .env
 __pycache__/
+*.key
 
 # Spark/Hadoop
 *.jar
