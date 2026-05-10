@@ -2,19 +2,22 @@ version: '3.8'
 
 x-airflow-common:
   &airflow-common
-  # 안정성이 검증된 2.7 버전 사용
-  image: apache/airflow:2.7.3
+  # 기성품 이미지를 쓰지 않고, 현재 폴더의 Dockerfile을 읽어 직접 빌드합니다.
+  build: .
   environment:
     &airflow-common-env
     AIRFLOW__CORE__EXECUTOR: LocalExecutor
     AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
-    AIRFLOW__CORE__LOAD_EXAMPLES: 'false' # 쓸데없는 예제 DAG 제거
+    AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
     AIRFLOW__CORE__DEFAULT_TIMEZONE: Asia/Seoul
-    _PIP_ADDITIONAL_REQUIREMENTS: "apache-airflow-providers-ssh" # 나중에 Spark 실행을 위해 필요함
+    # SSH는 이제 안 쓰므로 빼고, Spark 관련 패키지로 변경합니다.
+    _PIP_ADDITIONAL_REQUIREMENTS: "apache-airflow-providers-apache-spark pyspark==3.4.1"
   volumes:
     - ./dags:/opt/airflow/dags
     - ./logs:/opt/airflow/logs
     - ./plugins:/opt/airflow/plugins
+    # ★핵심: VM에 있던 scripts 폴더를 도커 내부로 마운트합니다.
+    - ./scripts:/opt/airflow/scripts 
   user: "${AIRFLOW_UID:-50000}:0"
 
 services:

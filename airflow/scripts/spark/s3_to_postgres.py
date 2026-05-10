@@ -2,7 +2,6 @@ import sys
 import os
 import argparse
 from datetime import datetime, timedelta
-from dotenv import load_dotenv
 from pyspark.sql import SparkSession
 from pyspark.sql import functions as F
 from pyspark.sql.types import TimestampType
@@ -15,42 +14,46 @@ parser.add_argument('--date', type=str, required=True, help='Airflow logical dat
 args = parser.parse_args()
 AIRFLOW_DATE = args.date
 
-# 🔸 OFFSET 수정: 2026-05-06 실행 시 2022-07-30 데이터를 가져오기 위해 1375 적용
-OFFSET_DAYS = 1375
+# 🔸 OFFSET 수정: 2026-05- 실행 시 2022-07-30 데이터를 가져오기 위해 1375 적용
+OFFSET_DAYS = 1379
 airflow_date_obj = datetime.strptime(AIRFLOW_DATE, "%Y-%m-%d")
 real_target_date_obj = airflow_date_obj - timedelta(days=OFFSET_DAYS)
 REAL_TARGET_DATE = real_target_date_obj.strftime("%Y-%m-%d")
 
 print(f"🚀 Airflow 스케줄 날짜: {AIRFLOW_DATE} | 🕰️ 실제 추출할 데이터 날짜: {REAL_TARGET_DATE}")
 
-# 🔸 필터링을 위한 타겟 날짜의 시작/끝 밀리초(ms) 직접 계산
-# .timestamp()는 시스템 타임존에 의존하므로, 명확하게 처리하기 위해 타임존 고려 필요 없음
 target_ts_start = int(real_target_date_obj.timestamp() * 1000)
 target_ts_end = target_ts_start + (24 * 60 * 60 * 1000) - 1
 
 # ==========================================
-# 2. 환경 변수 및 DB 세팅
+# 2. 환경 변수 및 DB 세팅 (Airflow가 주입해 줄 예정)
 # ==========================================
-env_path = "/home/ubuntu/metacode_portfolio/airflow/scripts/spark/.env"
-load_dotenv(env_path)
-AWS_ACCESS_KEY = os.getenv("AWS_ACCESS_KEY_ID")
-AWS_SECRET_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
+# 팩트 체크: 더 이상 .env 파일을 찾지 않습니다. 
+# 미션 3에서 Airflow DAG가 이 스크립트를 실행할 때 환경변수로 직접 값을 쏴줄 것입니다.
+AWS_ACCESS_KEY = os.environ.get("AWS_ACCESS_KEY_ID")
+AWS_SECRET_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
 
 if not AWS_ACCESS_KEY:
-    print(f"❌ 에러: {env_path} 경로에서 .env 파일을 로드하지 못했습니다.")
+    print("❌ 에러: AWS 환경변수가 주입되지 않았습니다. Airflow 설정을 확인하세요.")
     sys.exit(1)
 
-DB_USER = os.getenv("POSTGRES_USER")
-DB_PASSWORD = os.getenv("POSTGRES_PASSWORD")
-DB_URL = "jdbc:postgresql://localhost:5432/otto_dw"
+DB_USER = os.environ.get("DB_USER")
+DB_PASSWORD = os.environ.get("DB_PASSWORD")
+DB_HOST = os.environ.get("DB_HOST") # localhost 탈출!
+DB_PORT = os.environ.get("DB_PORT", "5432")
+
+# 주입받은 호스트 IP로 URL을 동적 생성합니다.
+DB_URL = f"jdbc:postgresql://{DB_HOST}:{DB_PORT}/otto_dw"
 DB_PROPERTIES = {"user": DB_USER, "password": DB_PASSWORD, "driver": "org.postgresql.Driver"}
 
 # ==========================================
-# 3. Spark 세션 초기화
+# 3. Spark 세션 초기화 (패키지 내재화)
 # ==========================================
+# 팩트 체크: 외부 명령어(spark-submit --packages)에 의존하지 않고, 코드 자체에 패키지를 박아넣습니다.
 spark = SparkSession.builder \
     .appName(f"Daily_ETL_{REAL_TARGET_DATE}") \
     .config("spark.sql.session.timeZone", "UTC") \
+    .config("spark.jars.packages", "org.apache.hadoop:hadoop-aws:3.3.4,org.postgresql:postgresql:42.6.0") \
     .getOrCreate()
 
 hadoop_conf = spark._jsc.hadoopConfiguration()
@@ -60,32 +63,27 @@ hadoop_conf.set("fs.s3a.endpoint", "s3.ap-northeast-2.amazonaws.com")
 hadoop_conf.set("fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem")
 
 # ==========================================
-# 4. 데이터 로드 및 타겟 날짜 필터링 (최적화 로직)
+# 4. 데이터 로드 및 타겟 날짜 필터링 
 # ==========================================
 S3_PATH = "s3a://otto-data-786802935144-ap-northeast-2-an/topics/otto-train-data/partition=0/"
 df_raw = spark.read.parquet(S3_PATH)
 
-# 🔸 [변경 포인트] 변환 과정에서 발생하는 타임존 오차를 없애기 위해 원본 'ts'로 직접 필터링
 print(f"🎯 필터링 범위(ms): {target_ts_start} ~ {target_ts_end}")
 daily_events = df_raw.filter((F.col("ts") >= target_ts_start) & (F.col("ts") <= target_ts_end))
 
-# 적재를 위한 컬럼 가공 (필터링이 끝난 후에 수행)
 daily_events = daily_events.withColumn("ts_datetime", (F.col("ts") / 1000).cast(TimestampType())) \
                            .withColumn("date_id", F.lit(REAL_TARGET_DATE).cast("date"))
 
-# 🔸 실제 데이터 건수 확인 로그
 actual_count = daily_events.count()
 print(f"📊 [DEBUG] 필터링된 실제 데이터 개수: {actual_count}")
 
 if actual_count == 0:
     print("⚠️ 경고: 필터링 결과 데이터가 0건입니다. OFFSET을 다시 확인하세요.")
-    # S3 전체 데이터 범위를 다시 출력하여 힌트를 얻습니다.
     df_raw.withColumn("dt", F.to_date((F.col("ts")/1000).cast(TimestampType()))) \
           .select(F.min("dt"), F.max("dt")).show()
     spark.stop()
-    sys.exit(0) # 혹은 1로 설정하여 Airflow를 실패처리 가능
+    sys.exit(0)
 
-# 연산 효율을 위해 캐싱
 daily_events.cache()
 
 # ==========================================

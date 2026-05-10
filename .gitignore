@@ -11,6 +11,7 @@ __pycache__/
 *.gz
 *.parquet
 *.csv
+data/
 
 # 출력 및 로그
 output/

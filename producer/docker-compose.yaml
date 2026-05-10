@@ -1,0 +1,14 @@
+services:
+  replay-producer:
+    build: .
+    volumes:
+      - ../data:/app/data
+    networks:
+      - metacode-net
+
+networks:
+  metacode-net:
+    external: true
+    # 일반적으로 폴더명_default 로 네트워크가 생성됩니다.
+    # 만약 에러가 난다면 'docker network ls' 명령어로 정확한 카프카 네트워크 이름을 확인해 교체하세요.
+    name: metacode-net

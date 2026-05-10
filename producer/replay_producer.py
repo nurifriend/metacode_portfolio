@@ -5,7 +5,7 @@ from confluent_kafka.avro import AvroProducer
 # ── 1. 설정 ────────────────────────────────────────────────
 TOPIC_NAME = 'otto-train-data'
 # 반드시 'sorted_events.jsonl'을 사용하세요!
-INPUT_FILE = 'sorted_events.jsonl' 
+INPUT_FILE = '/app/data/sorted_events.jsonl'
 SPEED_UP_FACTOR = 1.0  # 1000배속 (상황에 따라 조절)
 
 # ── 2. Avro 스키마 (기존과 동일) ──────────────────────────────
@@ -31,8 +31,8 @@ def delivery_report(err, msg):
 # ── 3. 메인 로직 ───────────────────────────────────────────
 def main():
     conf = {
-        'bootstrap.servers': 'localhost:9092',
-        'schema.registry.url': 'http://localhost:8081',
+        'bootstrap.servers': 'broker:29092',
+        'schema.registry.url': 'http://schema-registry:8081',
         'client.id': 'avro-producer-final'
     }
     producer = AvroProducer(conf, default_value_schema=value_schema)

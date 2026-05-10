@@ -1,0 +1,10 @@
+services:
+  data-prepper:
+    build: .  # 현재 폴더(data_prep)의 Dockerfile을 빌드
+    volumes:
+      - ../data:/app/data  # ★핵심: 현재 폴더에서 한 칸 위로(../) 올라가서 data 폴더를 찾음
+    deploy:
+      resources:
+        limits:
+          # sh 스크립트에서 sort에 8G를 주셨으므로, 컨테이너 자체는 10G 정도로 넉넉하게 잡습니다.
+          memory: 10G
