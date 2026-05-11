@@ -7,6 +7,8 @@ services:
     container_name: broker
     ports:
       - "9092:9092"
+      # [추가] 외부에서 JMX Exporter 메트릭을 확인하고 싶을 때 열어둡니다. (선택사항)
+      - "7071:7071"
     environment:
       KAFKA_NODE_ID: 1
       KAFKA_PROCESS_ROLES: 'broker,controller'
@@ -22,10 +24,15 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_LOG_DIRS: '/var/lib/kafka/data'
       CLUSTER_ID: 'MkU3OEVBNTcwNTJENDM2Qk'
+      
+      # [핵심 추가] Kafka 실행 시 JMX Exporter를 물고 올라가도록 설정
+      KAFKA_OPTS: "-javaagent:/etc/jmx_exporter/jmx_prometheus_javaagent-0.19.0.jar=7071:/etc/jmx_exporter/kafka-2_0_0.yaml"
     networks:
       - metacode-net
     volumes:
       - broker-data:/var/lib/kafka/data
+      # [추가] 아까 다운로드한 통역사 폴더를 컨테이너 내부로 마운트
+      - ./jmx_exporter:/etc/jmx_exporter:ro
 
   schema-registry:
     image: confluentinc/cp-schema-registry:7.6.0
@@ -61,15 +68,10 @@ services:
       CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: 1
       CONNECT_STATUS_STORAGE_TOPIC: docker-connect-status
       CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 1
-      
-      # [핵심 변경 사항] JSON Converter 대신 Avro Converter 사용 및 Schema Registry 연결
       CONNECT_KEY_CONVERTER: org.apache.kafka.connect.storage.StringConverter
       CONNECT_VALUE_CONVERTER: io.confluent.connect.avro.AvroConverter
       CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: http://schema-registry:8081
-      
       CONNECT_PLUGIN_PATH: "/usr/share/java,/usr/share/confluent-hub-components"
-      
-      # AWS Credentials (반드시 같은 폴더의 .env 파일에 값을 입력하세요)
       AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
       AWS_REGION: ${AWS_REGION}
@@ -102,6 +104,33 @@ services:
       KAFKA_CLUSTERS_0_KAFKACONNECT_0_NAME: "s3-connect"
       KAFKA_CLUSTERS_0_KAFKACONNECT_0_ADDRESS: "http://connect:8083"
       KAFKA_CLUSTERS_0_SCHEMAREGISTRY: "http://schema-registry:8081"
+    networks:
+      - metacode-net
+
+  # =======================================================
+  # [추가] 모니터링 스택 (Prometheus & Grafana)
+  # =======================================================
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      # 방금 만든 설정 파일을 마운트
+      - ./prometheus.yaml:/etc/prometheus/prometheus.yml
+    networks:
+      - metacode-net
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    depends_on:
+      - prometheus
+    ports:
+      # [핵심 수정] 3000번 포트는 Metabase가 점유 중이므로 3001번으로 우회합니다.
+      - "3001:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin # 초기 비밀번호 설정 (ID: admin)
     networks:
       - metacode-net
 

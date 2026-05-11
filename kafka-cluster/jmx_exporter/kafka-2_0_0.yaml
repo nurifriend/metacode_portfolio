@@ -1,0 +1,12 @@
+lowercaseOutputName: true
+rules:
+  - pattern : kafka.server<type=BrokerTopicMetrics, name=(.+)><>Count
+    name: kafka_server_BrokerTopicMetrics_$1_count
+    type: COUNTER
+  - pattern : kafka.server<type=BrokerTopicMetrics, name=(.+)><>OneMinuteRate
+    name: kafka_server_BrokerTopicMetrics_$1_1m_rate
+    type: GAUGE
+  - pattern: kafka.controller<type=KafkaController, name=(.+)><>Value
+    name: kafka_controller_$1
+    type: GAUGE
+  - pattern: ".*"

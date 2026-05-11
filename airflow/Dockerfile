@@ -20,8 +20,9 @@ ENV PATH="${JAVA_HOME}/bin:${PATH}"
 # 3. AIRFLOW 계정: 다시 일반 유저로 돌아와서 파이썬 패키지 설치
 USER airflow
 
-# 🔸 팩트 체크: 공식 제약 파일이 요구하는 3.5.0 버전으로 순응합니다.
+# 팩트 체크: faker 패키지를 추가하여 이미지를 빌드합니다.
 RUN pip install --no-cache-dir \
     pyspark==3.5.0 \
+    faker \
     apache-airflow-providers-apache-spark \
     --constraint "https://raw.githubusercontent.com/apache/airflow/constraints-2.7.3/constraints-3.8.txt"
