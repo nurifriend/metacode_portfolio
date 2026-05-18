@@ -1,0 +1,16 @@
+lowercaseOutputName: true
+rules:
+  # 1. S3로 실제 전송 성공한 레코드 수 (진짜 Consume)
+  - pattern: "kafka.connect<type=sink-task-metrics, connector=(.+), task=(.+)><>(sink-record-send-total)"
+    name: kafka_connect_sink_task_metrics_sink_record_send_total
+    labels:
+      connector: "$1"
+    type: COUNTER
+
+  # 2. Consumer Lag (현재 컨슈머 그룹의 지연량)
+  - pattern: "kafka.consumer<type=consumer-fetch-manager-metrics, client-id=(.+), topic=(.+), partition=(.+)><>(records-lag-max)"
+    name: kafka_consumer_records_lag_max
+    labels:
+      topic: "$2"
+      partition: "$3"
+    type: GAUGE

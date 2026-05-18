@@ -16,6 +16,9 @@ def main():
 
     spark = SparkSession.builder \
         .appName(f"BIZ_Aggregation_{target_date}") \
+        .config("spark.driver.memory", "2g") \
+        .config("spark.executor.memory", "2g") \
+        .config("spark.sql.shuffle.partitions", "10") \
         .config("spark.jars.packages", "org.postgresql:postgresql:42.6.0") \
         .getOrCreate()
 

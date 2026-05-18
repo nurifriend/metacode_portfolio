@@ -1,12 +1,18 @@
-lowercaseOutputName: true
 rules:
-  - pattern : kafka.server<type=BrokerTopicMetrics, name=(.+)><>Count
-    name: kafka_server_BrokerTopicMetrics_$1_count
+  # 1. 토픽별 메트릭을 추출하는 정교한 규칙 (최우선 적용)
+  - pattern: kafka.server<type=BrokerTopicMetrics, name=(.+), topic=(.+)><>Count
+    name: kafka_server_brokertopicmetrics_$1_count
+    labels:
+      topic: "$2"
     type: COUNTER
-  - pattern : kafka.server<type=BrokerTopicMetrics, name=(.+)><>OneMinuteRate
-    name: kafka_server_BrokerTopicMetrics_$1_1m_rate
+
+  - pattern: kafka.server<type=BrokerTopicMetrics, name=(.+), topic=(.+)><>OneMinuteRate
+    name: kafka_server_brokertopicmetrics_$1_1m_rate
+    labels:
+      topic: "$2"
     type: GAUGE
-  - pattern: kafka.controller<type=KafkaController, name=(.+)><>Value
-    name: kafka_controller_$1
-    type: GAUGE
-  - pattern: ".*"
+
+  # 2. 기존의 '토픽 없는' 브로커 전체 합계 규칙 (차선책)
+  - pattern : kafka.server<type=BrokerTopicMetrics, name=(.+)><>Count
+    name: kafka_server_brokertopicmetrics_$1_count
+    type: COUNTER

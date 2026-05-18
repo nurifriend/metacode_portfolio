@@ -5,3 +5,7 @@ scrape_configs:
   - job_name: 'kafka-broker'
     static_configs:
       - targets: ['broker:7071']
+
+  - job_name: 'kafka-connect'
+    static_configs:
+      - targets: ['connect:7072'] # docker-compose 서비스 이름인 'connect'를 호스트로 사용

@@ -58,6 +58,7 @@ services:
       - schema-registry
     ports:
       - "8083:8083"
+      - "7072:7072" # 추가: 커넥터 JMX 메트릭 수집용 포트 개방
     environment:
       CONNECT_BOOTSTRAP_SERVERS: 'broker:29092'
       CONNECT_REST_ADVERTISED_HOST_NAME: connect
@@ -75,8 +76,13 @@ services:
       AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
       AWS_REGION: ${AWS_REGION}
+      # 추가: JMX Exporter 에이전트를 7072 포트와 새로 만든 설정 파일로 실행
+      KAFKA_JMX_OPTS: "-javaagent:/usr/share/java/jmx_prometheus_javaagent-0.19.0.jar=7072:/etc/kafka-connect/connect_exporter.yaml"
     volumes:
       - connect-plugins:/usr/share/confluent-hub-components
+      # 팩트: 현재 docker-compose.yaml과 같은 위치에 있는 jmx_exporter 폴더를 바로 바라보도록 수정
+      - ./jmx_exporter/connect_exporter.yaml:/etc/kafka-connect/connect_exporter.yaml
+      - ./jmx_exporter/jmx_prometheus_javaagent-0.19.0.jar:/usr/share/java/jmx_prometheus_javaagent-0.19.0.jar
     command: 
       - bash
       - -c
